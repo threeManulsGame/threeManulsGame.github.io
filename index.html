@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Погладь трёх манулов!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+            max-width: 1400px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            border: 3px solid rgba(253, 187, 45, 0.5);
+            margin: 0 auto 30px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+            color: #fdbb2d;
+            background: linear-gradient(to right, #ff8a00, #da1b60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+        
+        .manuls-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .manul-game {
+            background: rgba(40, 40, 40, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            min-width: 300px;
+            border: 2px solid rgba(253, 187, 45, 0.3);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .manul-game:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+        }
+        
+        .manul-name {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #fdbb2d;
+            text-shadow: 0 0 10px rgba(253, 187, 45, 0.5);
+        }
+        
+        .cat-container {
+            position: relative;
+            margin: 15px auto;
+            width: 100%;
+            height: 250px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+        
+        .cat {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            background: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fdbb2d;
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 15px;
+            border: 4px solid #4CAF50;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .cat:hover {
+            transform: scale(1.02);
+        }
+        
+        .cat:active {
+            transform: scale(0.98);
+        }
+        
+        .timers {
+            display: flex;
+            flex-direction: column;
+            margin: 15px 0;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 12px;
+            border-radius: 15px;
+            border: 1px solid rgba(253, 187, 45, 0.3);
+            min-height: 140px;
+            position: relative;
+        }
+        
+        .timer-item {
+            text-align: center;
+            padding: 8px 0;
+        }
+        
+        .timer-label {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: #aaa;
+        }
+        
+        .timer-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fdbb2d;
+            text-shadow: 0 0 8px rgba(253, 187, 45, 0.5);
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .happy-message {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #9C27B0;
+            text-shadow: 0 0 10px rgba(156, 39, 176, 0.7);
+            transform: rotate(-30deg);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 2px solid #9C27B0;
+            animation: pulseHappy 2s infinite;
+        }
+        
+        @keyframes pulseHappy {
+            0% { transform: translate(-50%, -50%) rotate(-30deg) scale(1); }
+            50% { transform: translate(-50%, -50%) rotate(-30deg) scale(1.1); }
+            100% { transform: translate(-50%, -50%) rotate(-30deg) scale(1); }
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 12px;
+            border-radius: 15px;
+            border: 1px solid rgba(253, 187, 45, 0.3);
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 0 15px;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            margin-bottom: 3px;
+            color: #aaa;
+        }
+        
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #4CAF50;
+            text-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00c853, #b2ff59);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .instructions {
+            margin: 20px 0;
+            line-height: 1.6;
+            font-size: 1.1rem;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(253, 187, 45, 0.3);
+            text-align: center;
+        }
+        
+        .highlight {
+            color: #fdbb2d;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(253, 187, 45, 0.8);
+        }
+        
+        .warning {
+            color: #ff6b6b;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(255, 107, 107, 0.8);
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #ff8a00, #da1b60);
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 15px auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            min-width: 250px;
+            display: block;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(to right, #ff9a00, #e62b70);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn:disabled {
+            background: linear-gradient(to right, #666, #444);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .game-over, .game-win {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .paw-prints {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+            z-index: 5;
+        }
+        
+        .paw {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0;
+            animation: fadePaw 1.2s ease-out;
+        }
+        
+        @keyframes fadePaw {
+            0% {
+                opacity: 1;
+                transform: scale(0.3);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.8);
+            }
+        }
+        
+        .state-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1rem;
+            z-index: 30;
+        }
+        
+        .calm-state {
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+        }
+        
+        .alert-state {
+            background: linear-gradient(to right, #FFC107, #FF9800);
+        }
+        
+        .sleep-state {
+            background: linear-gradient(to right, #2196F3, #0D47A1);
+        }
+        
+        .angry-state {
+            background: linear-gradient(to right, #f44336, #d32f2f);
+        }
+        
+        .happy-state {
+            background: linear-gradient(to right, #9C27B0, #673AB7);
+        }
+        
+        .win-message {
+            font-size: 3.5rem;
+            color: #4CAF50;
+            text-shadow: 0 0 20px rgba(0, 200, 83, 0.7);
+            background: linear-gradient(to right, #00c853, #b2ff59);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+        }
+        
+        .happy-manuls {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .happy-manul {
+            width: 200px;
+            height: 200px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 200, 83, 0.5);
+            border: 4px solid #9C27B0;
+        }
+        
+        .happy-manul img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .death-message {
+            font-size: 3rem;
+            color: #ff6b6b;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        
+        .zzz-animation {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.3rem;
+            color: white;
+            animation: zzz 2s infinite;
+        }
+        
+        @keyframes zzz {
+            0% { opacity: 0; transform: translateY(0) scale(0.8); }
+            50% { opacity: 1; transform: translateY(-10px) scale(1); }
+            100% { opacity: 0; transform: translateY(-20px) scale(1.2); }
+        }
+        
+        .mobile-warning {
+            display: none;
+            background: rgba(255, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        /* Стили для контейнера злого манула */
+        .angry-manul-container {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            border: 4px solid #f44336;
+        }
+        
+        .angry-manul {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        @media (max-width: 1100px) {
+            .manuls-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .manul-game {
+                max-width: 500px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .manul-name {
+                font-size: 1.5rem;
+            }
+            
+            .cat-container {
+                height: 200px;
+            }
+            
+            .stat-value, .timer-value {
+                font-size: 1.3rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 1rem;
+                min-width: 200px;
+            }
+            
+            .win-message, .death-message {
+                font-size: 2.5rem;
+            }
+            
+            .mobile-warning {
+                display: block;
+            }
+            
+            .angry-manul-container {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        /* ===== ДОБАВЛЕННЫЕ СТИЛИ ДЛЯ ЗАЩИТЫ ОТ ДВОЙНЫХ КЛИКОВ ===== */
+        .pet-btn.processing {
+            opacity: 0.7;
+            transform: scale(0.95);
+            cursor: not-allowed;
+        }
+        
+        .pet-btn:disabled {
+            cursor: not-allowed;
+            background: linear-gradient(to right, #666, #444);
+            transform: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ПОГЛАДЬ ТРЁХ МАНУЛОВ!</h1>
+        
+        <div class="instructions">
+            <p>Ваша задача - сделать всех трёх манулов счастливыми!</p>
+            <p>Погладьте каждого манула <span class="highlight">25 раз</span>, чтобы он стал счастливым.</p>
+            <p>Будьте осторожны - если погладить не вовремя, манул может разозлиться!</p>
+            <p>Для связи с создателем пишите на почту: <span class="highlight">upupup7777@outlook.com</span></p>
+            <div class="mobile-warning">
+                На мобильных устройствах используйте кнопку "Погладить" под каждым манулом
+            </div>
+        </div>
+        
+        <div class="manuls-container">
+            <!-- Манул Зеленогорск -->
+            <div class="manul-game" id="manul1">
+                <div class="manul-name">Зеленогорск</div>
+                <div class="cat-container">
+                    <div class="cat" id="cat1">
+                        Нажмите 'Начать игру'!
+                    </div>
+                    <div class="state-indicator calm-state">СПОКОЙНЫЙ</div>
+                    <div class="paw-prints" id="pawPrints1"></div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress1"></div>
+                </div>
+                
+                <div class="timers">
+                    <div class="timer-item">
+                        <div class="timer-label">Нельзя гладить ещё:</div>
+                        <div class="timer-value" id="timer1-1">00:00</div>
+                    </div>
+                    <div class="timer-item">
+                        <div class="timer-label">Можно гладить ещё:</div>
+                        <div class="timer-value" id="timer1-2">НЕЛЬЗЯ</div>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Поглаживаний</div>
+                        <div class="stat-value" id="petCount1">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Снов</div>
+                        <div class="stat-value" id="sleepCount1">0</div>
+                    </div>
+                </div>
+                
+                <button class="btn pet-btn" data-manul="1" id="petBtn1">Погладить</button>
+            </div>
+            
+            <!-- Манул Караганда -->
+            <div class="manul-game" id="manul2">
+                <div class="manul-name">Караганда</div>
+                <div class="cat-container">
+                    <div class="cat" id="cat2">
+                        Нажмите 'Начать игру'!
+                    </div>
+                    <div class="state-indicator calm-state">СПОКОЙНЫЙ</div>
+                    <div class="paw-prints" id="pawPrints2"></div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress2"></div>
+                </div>
+                
+                <div class="timers">
+                    <div class="timer-item">
+                        <div class="timer-label">Нельзя гладить ещё:</div>
+                        <div class="timer-value" id="timer2-1">00:00</div>
+                    </div>
+                    <div class="timer-item">
+                        <div class="timer-label">Можно гладить ещё:</div>
+                        <div class="timer-value" id="timer2-2">НЕЛЬЗЯ</div>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Поглаживаний</div>
+                        <div class="stat-value" id="petCount2">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Снов</div>
+                        <div class="stat-value" id="sleepCount2">0</div>
+                    </div>
+                </div>
+                
+                <button class="btn pet-btn" data-manul="2" id="petBtn2">Погладить</button>
+            </div>
+            
+            <!-- Манул Жора -->
+            <div class="manul-game" id="manul3">
+                <div class="manul-name">Жора</div>
+                <div class="cat-container">
+                    <div class="cat" id="cat3">
+                        Нажмите 'Начать игру'!
+                    </div>
+                    <div class="state-indicator calm-state">СПОКОЙНЫЙ</div>
+                    <div class="paw-prints" id="pawPrints3"></div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress3"></div>
+                </div>
+                
+                <div class="timers">
+                    <div class="timer-item">
+                        <div class="timer-label">Нельзя гладить ещё:</div>
+                        <div class="timer-value" id="timer3-1">00:00</div>
+                    </div>
+                    <div class="timer-item">
+                        <div class="timer-label">Можно гладить ещё:</div>
+                        <div class="timer-value" id="timer3-2">НЕЛЬЗЯ</div>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Поглаживаний</div>
+                        <div class="stat-value" id="petCount3">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Снов</div>
+                        <div class="stat-value" id="sleepCount3">0</div>
+                    </div>
+                </div>
+                
+                <button class="btn pet-btn" data-manul="3" id="petBtn3">Погладить</button>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="startBtn" class="btn">Начать игру</button>
+            <button id="restartBtn" class="btn">Перезапустить игру</button>
+        </div>
+    </div>
+
+    <!-- Окно проигрыша -->
+    <div id="gameOver" class="game-over hidden">
+        <!-- Контейнер для злого манула -->
+        <div class="angry-manul-container">
+            <img id="angryManulImage" class="angry-manul" src="" alt="Злой манул">
+        </div>
+        
+        <div class="death-message">МАНУЛ ВАС СЪЕЛ!</div>
+        <p id="deathReason" style="font-size: 1.8rem; margin-bottom: 30px;">Причина смерти</p>
+        <button id="restartAfterDeath" class="btn">Попробовать снова</button>
+    </div>
+    
+    <!-- Окно победы -->
+    <div id="gameWin" class="game-win hidden">
+        <div class="win-message">ВЫ ПОБЕДИЛИ!</div>
+        <p style="font-size: 2rem; margin-bottom: 30px;">Все манулы счастливы!</p>
+        
+        <div class="happy-manuls">
+            <div class="happy-manul">
+                <img id="win-manul1" src="" alt="Счастливый Зеленогорск">
+            </div>
+            <div class="happy-manul">
+                <img id="win-manul2" src="" alt="Счастливая Караганда">
+            </div>
+            <div class="happy-manul">
+                <img id="win-manul3" src="" alt="Счастливый Жора">
+            </div>
+        </div>
+        
+        <button id="playAgain" class="btn">Играть снова</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Константы игры
+            const MIN_WAIT_TIME = 15000; // 15 секунд
+            const MAX_WAIT_TIME = 60000; // 1 минута
+            const PET_TIME = 10000; // 10 секунд
+            const MIN_SLEEP_TIME = 180000; // 3 минуты
+            const MAX_SLEEP_TIME = 420000; // 7 минут
+            const SLEEP_CHANCE = 0.15; // 15% шанс уснуть
+            const WAKE_CHANCE = 0.3; // 30% шанс проснуться при поглаживании
+            const WIN_SCORE = 25; // 25 поглаживаний для победы
+            
+            // Класс для управления каждым манулом
+            class ManulGame {
+                constructor(id, name) {
+                    this.id = id;
+                    this.name = name;
+                    this.cat = document.getElementById(`cat${id}`);
+                    this.timer1 = document.getElementById(`timer${id}-1`);
+                    this.timer2 = document.getElementById(`timer${id}-2`);
+                    this.petCountEl = document.getElementById(`petCount${id}`);
+                    this.sleepCountEl = document.getElementById(`sleepCount${id}`);
+                    this.progressBar = document.getElementById(`progress${id}`);
+                    this.stateIndicator = document.querySelector(`#manul${id} .state-indicator`);
+                    this.pawPrints = document.getElementById(`pawPrints${id}`);
+                    this.petBtn = document.getElementById(`petBtn${id}`);
+                    this.timersContainer = document.querySelector(`#manul${id} .timers`);
+                    
+                    // Изображения для состояний - локальные файлы
+                    this.images = {
+                        calm: `manul${id}_calm.jpg`,
+                        alert: `manul${id}_alert.jpg`,
+                        sleep: `manul${id}_sleep.jpg`,
+                        angry: `manul${id}_angry.jpg`,
+                        happy: `manul${id}_happy.jpg`
+                    };
+                    
+                    this.currentState = 'calm'; // 'calm', 'alert', 'sleep', 'angry', 'happy'
+                    this.pets = 0;
+                    this.sleeps = 0;
+                    this.waitTimer = null;
+                    this.petTimer = null;
+                    this.sleepTimer = null;
+                    this.waitTimeLeft = 0;
+                    this.petTimeLeft = 0;
+                    this.gameActive = false;
+                }
+                
+                // Форматирование времени
+                formatTime(ms) {
+                    const minutes = Math.floor(ms / 60000);
+                    const seconds = Math.floor((ms % 60000) / 1000);
+                    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+                
+                // Обновление прогресс-бара
+                updateProgressBar() {
+                    const progress = (this.pets / WIN_SCORE) * 100;
+                    this.progressBar.style.width = `${progress}%`;
+                }
+                
+                // Генерация случайного времени ожидания
+                getRandomWaitTime() {
+                    return Math.floor(Math.random() * (MAX_WAIT_TIME - MIN_WAIT_TIME + 1)) + MIN_WAIT_TIME;
+                }
+                
+                // Генерация случайного времени сна
+                getRandomSleepTime() {
+                    return Math.floor(Math.random() * (MAX_SLEEP_TIME - MIN_SLEEP_TIME + 1)) + MIN_SLEEP_TIME;
+                }
+                
+                // Обновление изображения манула
+                updateCatImage() {
+                    // Удаляем старые анимации
+                    const oldZzz = this.cat.querySelectorAll('.zzz-animation');
+                    oldZzz.forEach(el => el.remove());
+                    
+                    // Определяем изображение для текущего состояния
+                    let imageUrl = this.images[this.currentState] || SYSTEM_IMAGES[this.currentState];
+                    
+                    // Устанавливаем изображение
+                    if (imageUrl) {
+                        this.cat.style.backgroundImage = `url(${imageUrl})`;
+                        this.cat.innerHTML = '';
+                    } else {
+                        this.cat.style.backgroundImage = 'none';
+                        this.cat.innerHTML = this.getStateText();
+                    }
+                    
+                    // Устанавливаем стили в зависимости от состояния
+                    switch (this.currentState) {
+                        case 'calm':
+                            this.cat.style.borderColor = "#4CAF50";
+                            this.stateIndicator.textContent = "СПОКОЙНЫЙ";
+                            this.stateIndicator.className = "state-indicator calm-state";
+                            break;
+                        case 'alert':
+                            this.cat.style.borderColor = "#FFC107";
+                            this.stateIndicator.textContent = "МОЖНО ГЛАДИТЬ!";
+                            this.stateIndicator.className = "state-indicator alert-state";
+                            break;
+                        case 'sleep':
+                            this.cat.style.borderColor = "#2196F3";
+                            this.stateIndicator.textContent = "СПИТ";
+                            this.stateIndicator.className = "state-indicator sleep-state";
+                            
+                            // Добавляем анимацию ZZZ
+                            for (let i = 0; i < 3; i++) {
+                                const zzz = document.createElement('div');
+                                zzz.className = 'zzz-animation';
+                                zzz.textContent = 'z'.repeat(i+1);
+                                zzz.style.animationDelay = `${i * 0.5}s`;
+                                zzz.style.right = `${10 + i * 10}px`;
+                                this.cat.appendChild(zzz);
+                            }
+                            break;
+                        case 'angry':
+                            this.cat.style.borderColor = "#f44336";
+                            this.stateIndicator.textContent = "ЗЛОЙ!";
+                            this.stateIndicator.className = "state-indicator angry-state";
+                            break;
+                        case 'happy':
+                            this.cat.style.borderColor = "#9C27B0";
+                            this.stateIndicator.textContent = "СЧАСТЛИВЫЙ!";
+                            this.stateIndicator.className = "state-indicator happy-state";
+                            // Обновляем изображение в окне победы
+                            document.getElementById(`win-manul${this.id}`).src = this.images.happy || SYSTEM_IMAGES.happy;
+                            break;
+                    }
+                    this.cat.style.backgroundSize = "cover";
+                    this.cat.style.backgroundPosition = "center";
+                }
+                
+                // Текст состояния для отображения
+                getStateText() {
+                    switch(this.currentState) {
+                        case 'calm': return 'Спокойный ' + this.name;
+                        case 'alert': return 'Готов к поглаживанию ' + this.name;
+                        case 'sleep': return 'Спит ' + this.name;
+                        case 'angry': return 'Злой ' + this.name;
+                        case 'happy': return 'Счастливый ' + this.name;
+                        default: return this.name;
+                    }
+                }
+                
+                // Обновление интерфейса для счастливого состояния
+                updateUIForHappyState() {
+                    // Скрываем кнопку поглаживания
+                    this.petBtn.style.display = 'none';
+                    
+                    // Создаем сообщение о счастье
+                    const happyMessage = document.createElement('div');
+                    happyMessage.className = 'happy-message';
+                    happyMessage.textContent = 'Манул счастлив!';
+                    happyMessage.style.top = "65%"; // Сдвигаем вниз
+                    this.timersContainer.innerHTML = '';
+                    this.timersContainer.appendChild(happyMessage);
+                    
+                    // Останавливаем все таймеры
+                    clearInterval(this.waitTimer);
+                    clearInterval(this.petTimer);
+                    clearTimeout(this.sleepTimer);
+                }
+                
+                // Запуск фазы ожидания
+                startWaitPhase() {
+                    // Очищаем предыдущие таймеры
+                    clearInterval(this.waitTimer);
+                    clearInterval(this.petTimer);
+                    clearTimeout(this.sleepTimer);
+                    
+                    this.currentState = 'calm';
+                    this.updateCatImage();
+                    
+                    const waitTime = this.getRandomWaitTime();
+                    this.waitTimeLeft = waitTime;
+                    this.timer1.textContent = this.formatTime(this.waitTimeLeft);
+                    this.timer2.textContent = "НЕЛЬЗЯ";
+                    
+                    this.waitTimer = setInterval(() => {
+                        this.waitTimeLeft -= 1000;
+                        this.timer1.textContent = this.formatTime(this.waitTimeLeft);
+                        
+                        if (this.waitTimeLeft <= 0) {
+                            clearInterval(this.waitTimer);
+                            this.startPetPhase();
+                        }
+                    }, 1000);
+                }
+                
+                // Запуск фазы поглаживания
+                startPetPhase() {
+                    this.currentState = 'alert';
+                    this.updateCatImage();
+                    
+                    this.petTimeLeft = PET_TIME;
+                    this.timer1.textContent = "ГЛАДЬТЕ!";
+                    this.timer2.textContent = this.formatTime(this.petTimeLeft);
+                    
+                    this.petTimer = setInterval(() => {
+                        this.petTimeLeft -= 1000;
+                        this.timer2.textContent = this.formatTime(this.petTimeLeft);
+                        
+                        if (this.petTimeLeft <= 0) {
+                            clearInterval(this.petTimer);
+                            this.endGame("Вы не погладили манула вовремя!");
+                        }
+                    }, 1000);
+                }
+                
+                // Запуск фазы сна
+                startSleepPhase() {
+                    this.currentState = 'sleep';
+                    this.updateCatImage();
+                    
+                    // Обновляем таймеры
+                    this.timer1.textContent = "Манул спит";
+                    this.timer2.textContent = "МОЖНО ГЛАДИТЬ (риск!)";
+                    
+                    // Устанавливаем таймер сна (скрытый)
+                    const sleepTime = this.getRandomSleepTime();
+                    
+                    this.sleepTimer = setTimeout(() => {
+                        // Манул просыпается сам - успешный сон
+                        if (this.currentState === 'sleep') {
+                            this.sleeps++;
+                            this.sleepCountEl.textContent = this.sleeps;
+                            this.startWaitPhase();
+                        }
+                    }, sleepTime);
+                }
+                
+                // Создание анимации лапки
+                createPawAnimation() {
+                    const paw = document.createElement('div');
+                    paw.className = 'paw';
+                    
+                    // Случайный вид лапки
+                    const pawTypes = ['paw', 'heart', 'star'];
+                    const pawType = pawTypes[Math.floor(Math.random() * pawTypes.length)];
+                    
+                    if (pawType === 'paw') {
+                        paw.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="35" height="35">
+                            <path fill="rgba(253,187,45,0.7)" d="M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M15,9A1,1 0 0,1 16,10A1,1 0 0,1 15,11A1,1 0 0,1 14,10A1,1 0 0,1 15,9M9,9A1,1 0 0,1 10,10A1,1 0 0,1 9,11A1,1 0 0,1 8,10A1,1 0 0,1 9,9M16.5,6A1.5,1.5 0 0,1 18,7.5A1.5,1.5 0 0,1 16.5,9A1.5,1.5 0 0,1 15,7.5A1.5,1.5 0 0,1 16.5,6M7.5,6A1.5,1.5 0 0,1 9,7.5A1.5,1.5 0 0,1 7.5,9A1.5,1.5 0 0,1 6,7.5A1.5,1.5 0 0,1 7.5,6M4,10A1,1 0 0,1 5,11A1,1 0 0,1 4,12A1,1 0 0,1 3,11A1,1 0 0,1 4,10M20,10A1,1 0 0,1 21,11A1,1 0 0,1 20,12A1,1 0 0,1 19,11A1,1 0 0,1 20,10Z"/>
+                        </svg>`;
+                    } else if (pawType === 'heart') {
+                        paw.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="35" height="35">
+                            <path fill="rgba(255,107,107,0.8)" d="M12,21.35L10.55,20.03C5.4,15.36 2,12.28 2,8.5C2,5.42 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.09C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.42 22,8.5C22,12.28 18.6,15.36 13.45,20.03L12,21.35Z"/>
+                        </svg>`;
+                    } else {
+                        paw.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="35" height="35">
+                            <path fill="rgba(255,215,0,0.8)" d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/>
+                        </svg>`;
+                    }
+                    
+                    // Случайная позиция на мануле
+                    const x = Math.random() * 80 + 10;
+                    const y = Math.random() * 70 + 15;
+                    
+                    paw.style.left = `${x}%`;
+                    paw.style.top = `${y}%`;
+                    paw.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`;
+                    this.pawPrints.appendChild(paw);
+                    
+                    // Удаление следа после анимации
+                    setTimeout(() => {
+                        paw.remove();
+                    }, 1200);
+                }
+                
+                // Создание анимации сердечка
+                createHeartAnimation() {
+                    const heart = document.createElement('div');
+                    heart.className = 'hearts';
+                    heart.innerHTML = '❤️';
+                    
+                    // Случайная позиция на мануле
+                    const x = Math.random() * 70 + 15;
+                    
+                    heart.style.left = `${x}%`;
+                    this.cat.appendChild(heart);
+                    
+                    // Удаление сердечка после анимации
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 1500);
+                }
+                
+                // Поглаживание манула
+                petCat() {
+                    if (!this.gameActive || this.currentState === 'happy' || this.currentState === 'angry') return;
+                    
+                    if (this.currentState === 'alert') {
+                        // Правильное поглаживание
+                        this.pets++;
+                        this.petCountEl.textContent = this.pets;
+                        this.updateProgressBar();
+                        
+                        // Пульсация при поглаживании
+                        this.cat.classList.add('pulse');
+                        setTimeout(() => {
+                            this.cat.classList.remove('pulse');
+                        }, 500);
+                        
+                        // Создаем анимацию сердечка
+                        this.createHeartAnimation();
+                        
+                        // Проверяем, достигли ли победы по этому манулу
+                        if (this.pets >= WIN_SCORE) {
+                            this.currentState = 'happy';
+                            this.updateCatImage();
+                            // Обновляем интерфейс для счастливого состояния
+                            this.updateUIForHappyState();
+                            // Проверяем общую победу
+                            checkWinCondition();
+                            return;
+                        }
+                        
+                        // Сброс таймеров
+                        clearInterval(this.petTimer);
+                        
+                        // Проверяем, уснул ли манул
+                        if (Math.random() < SLEEP_CHANCE) {
+                            this.startSleepPhase();
+                        } else {
+                            // Запуск новой фазы ожидания
+                            this.startWaitPhase();
+                        }
+                        
+                        // Создаем анимацию лапки
+                        this.createPawAnimation();
+                    } 
+                    else if (this.currentState === 'sleep') {
+                        // Поглаживание спящего манула
+                        this.pets++;
+                        this.petCountEl.textContent = this.pets;
+                        this.updateProgressBar();
+                        
+                        // Проверяем, достигли ли победы по этому манулу
+                        if (this.pets >= WIN_SCORE) {
+                            this.currentState = 'happy';
+                            this.updateCatImage();
+                            // Обновляем интерфейс для счастливого состояния
+                            this.updateUIForHappyState();
+                            // Проверяем общую победу
+                            checkWinCondition();
+                            return;
+                        }
+                        
+                        // Проверяем, проснулся ли манул
+                        if (Math.random() < WAKE_CHANCE) {
+                            // Манул проснулся и съел игрока
+                            this.endGame("Вы разбудили манула!");
+                        } else {
+                            // Манул продолжает спать
+                            this.createPawAnimation();
+                        }
+                    } 
+                    else if (this.currentState === 'calm') {
+                        // Погладили не вовремя
+                        this.endGame("Вы погладили манула не вовремя!");
+                    }
+                }
+                
+                // Конец игры (проигрыш)
+                endGame(reason) {
+                    // Останавливаем всех манулов
+                    manuls.forEach(manul => {
+                        manul.gameActive = false;
+                        clearInterval(manul.waitTimer);
+                        clearInterval(manul.petTimer);
+                        clearTimeout(manul.sleepTimer);
+                    });
+                    
+                    // Устанавливаем изображение злого манула для экрана проигрыша
+                    const angryImage = this.images.angry || SYSTEM_IMAGES.angry;
+                    document.getElementById('angryManulImage').src = angryImage;
+                    
+                    // Показываем экран поражения
+                    document.getElementById('deathReason').textContent = `${this.name}: ${reason}`;
+                    document.getElementById('gameOver').classList.remove('hidden');
+                    
+                    // Меняем состояние этого манула на злое
+                    this.currentState = 'angry';
+                    this.updateCatImage();
+                }
+                
+                // Перезапуск игры для манула
+                restart() {
+                    // Сброс состояния
+                    this.gameActive = true;
+                    this.pets = 0;
+                    this.sleeps = 0;
+                    this.petCountEl.textContent = "0";
+                    this.sleepCountEl.textContent = "0";
+                    this.updateProgressBar();
+                    this.currentState = 'calm';
+                    this.updateCatImage();
+                    
+                    // Восстанавливаем таймеры
+                    this.timersContainer.innerHTML = `
+                        <div class="timer-item">
+                            <div class="timer-label">Нельзя гладить ещё:</div>
+                            <div class="timer-value" id="timer${this.id}-1">00:00</div>
+                        </div>
+                        <div class="timer-item">
+                            <div class="timer-label">Можно гладить ещё:</div>
+                            <div class="timer-value" id="timer${this.id}-2">НЕЛЬЗЯ</div>
+                        </div>
+                    `;
+                    
+                    // Обновляем ссылки на элементы таймеров
+                    this.timer1 = document.getElementById(`timer${this.id}-1`);
+                    this.timer2 = document.getElementById(`timer${this.id}-2`);
+                    
+                    // Показываем кнопку
+                    this.petBtn.style.display = 'block';
+                    
+                    // Очищаем таймеры
+                    clearInterval(this.waitTimer);
+                    clearInterval(this.petTimer);
+                    clearTimeout(this.sleepTimer);
+                    
+                    // Запуск новой игры
+                    this.startWaitPhase();
+                }
+                
+                // Запуск игры для манула
+                start() {
+                    this.gameActive = true;
+                    this.restart();
+                }
+            }
+            
+            // Создаем игры для трех манулов
+            const manul1 = new ManulGame(1, "Зеленогорск");
+            const manul2 = new ManulGame(2, "Караганда");
+            const manul3 = new ManulGame(3, "Жора");
+            const manuls = [manul1, manul2, manul3];
+            
+            // Проверка условия победы
+            function checkWinCondition() {
+                const allHappy = manuls.every(manul => manul.currentState === 'happy');
+                if (allHappy) {
+                    // Останавливаем всех манулов
+                    manuls.forEach(manul => {
+                        manul.gameActive = false;
+                        clearInterval(manul.waitTimer);
+                        clearInterval(manul.petTimer);
+                        clearTimeout(manul.sleepTimer);
+                    });
+                    
+                    document.getElementById('gameWin').classList.remove('hidden');
+                }
+            }
+            
+            // ===== ОБНОВЛЕННЫЕ ОБРАБОТЧИКИ СОБЫТИЙ С ЗАЩИТОЙ ОТ ДВОЙНЫХ КЛИКОВ =====
+            document.querySelectorAll('.pet-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const button = this;
+                    const manulId = button.getAttribute('data-manul');
+                    
+                    // Блокировка кнопки для предотвращения двойного клика
+                    button.classList.add('processing');
+                    button.disabled = true;
+                    
+                    // Выполняем действие поглаживания
+                    switch(manulId) {
+                        case '1': manul1.petCat(); break;
+                        case '2': manul2.petCat(); break;
+                        case '3': manul3.petCat(); break;
+                    }
+                    
+                    // Разблокировка кнопки через 300 мс
+                    setTimeout(() => {
+                        button.classList.remove('processing');
+                        button.disabled = false;
+                    }, 300);
+                });
+            });
+            
+            document.getElementById('startBtn').addEventListener('click', () => {
+                restartGame();
+            });
+            
+            document.getElementById('restartBtn').addEventListener('click', restartGame);
+            document.getElementById('restartAfterDeath').addEventListener('click', restartGame);
+            document.getElementById('playAgain').addEventListener('click', restartGame);
+            
+            function restartGame() {
+                document.getElementById('gameOver').classList.add('hidden');
+                document.getElementById('gameWin').classList.add('hidden');
+                document.getElementById('startBtn').textContent = "Игра идет!";
+                
+                manuls.forEach(manul => {
+                    manul.restart();
+                    
+                    // Устанавливаем локальные изображения для окна победы
+                    document.getElementById(`win-manul${manul.id}`).src = manul.images.happy;
+                });
+            }
+            
+            // Инициализация состояния кнопки
+            document.getElementById('startBtn').textContent = "Начать игру";
+        });
+    </script>
+</body>
+</html>
